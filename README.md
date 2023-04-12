@@ -4,7 +4,7 @@ Very simple PHP PDO Wrapper with only depedency of PDO
 # How to use
 Just include the PHP script, connect and query
 
-    
+```php
     <?php
     
     // include the script
