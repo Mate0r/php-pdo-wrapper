@@ -15,7 +15,7 @@ require ('DB.php');
 DB::connect('db_host', 'db_user', 'db_password', 'db_name');
 
 // or create DB connection as instance : new DB($host, $user, $pass, $name, $prefix = '', $charset = 'utf8')
-$db_instance = new DB('db_host', 'db_user', 'db_password', 'db_name');
+$db = new DB('db_host', 'db_user', 'db_password', 'db_name');
 
 
 // select query with static DB instance
@@ -36,19 +36,19 @@ DB::table('table_name')->where('id', 1)->update(['name' => 'Test New'])->run();
 DB::table('table_name')->where('id', 1)->delete()->run();
 
 // or as non static
-$db_instance->table('table_name')->where('id', 1)->update(['name' => 'Test New'])->run();
-$db_instance->table('table_name')->where('id', 1)->delete()->run();
+$db->table('table_name')->where('id', 1)->update(['name' => 'Test New'])->run();
+$db->table('table_name')->where('id', 1)->delete()->run();
 
 
 // get list of tables in database
 DB::tables();
 
 // or as non static
-$db_instance->tables();
+$db->tables();
 
 
 // get list of column in table
 DB::columns('table_name');
 
 // or as non static
-$db_instance->columns('table_name');
+$db->columns('table_name');
