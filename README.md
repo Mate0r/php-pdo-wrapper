@@ -1,4 +1,4 @@
-# PHP-PDO-Wrapper
+# php-pdo-wrapper
 Very simple PHP PDO Wrapper with only depedency of PDO
 
 # How to use
