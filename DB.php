@@ -1,6 +1,6 @@
 <?php
 
-class DB
+class BDD
 {
     public static $instance;
     public $pdo;
@@ -187,6 +187,13 @@ class DB
     }
 
 
+    public function delete()
+    {
+        $this->action = "DELETE";
+        return $this;
+    }
+
+
     /**
      * Get the prepared SQL code of DB object
      */
@@ -196,9 +203,9 @@ class DB
         if ($this->action === "SELECT") {
             $sql = "SELECT * FROM ".$this->table;
         } else if ($this->action === "INSERT") {
-            $sql = "INSERT INTO ".$this->table."(".implode(",", array_keys($this->data)).") VALUES (?".str_repeat(",?", count($this->data) - 1).")";
+            $sql = "INSERT INTO ".$this->table."(`".implode("`,`", array_keys($this->data))."`) VALUES (?".str_repeat(",?", count($this->data) - 1).")";
         } else if ($this->action === "UPDATE") {
-            $sql = "UPDATE ".$this->table." SET ".implode(" = ?, ", array_keys($this->data))." = ?";
+            $sql = "UPDATE ".$this->table." SET `".implode(" = ?`, `", array_keys($this->data))."` = ?";
         } else if ($this->action === "DELETE") {
             $sql = "DELETE FROM ".$this->table;
         } else if ($this->action === "COUNT") {
@@ -208,12 +215,14 @@ class DB
         # where statement
         if ($this->where) {
             $sql .= " WHERE ";
+            $lastKey = array_keys($this->where);
+            $lastKey = end($lastKey); // get the last key of the array
             foreach ($this->where as $key => $w) {
                 $sql .= $w[0]." ".$w[1];
                 if (is_array($w[2])) {
                     $sql .= " (?".str_repeat(",?", count($w[2]) - 1).")";
                 } else {
-                    $sql .= " ?".($key !== array_key_last($this->where) ? " AND " : "");
+                    $sql .= " ?".($key !== $lastKey ? " AND " : "");
                 }
             }
         }
@@ -242,6 +251,8 @@ class DB
         if ($this->action === "SELECT") {
             $result = $pre->execute($this->where_values) ? $pre->fetchAll(PDO::FETCH_CLASS, $classname) : false;
         } else if ($this->action === "INSERT") {
+            // var_dump($this->toSql()); echo "<br>";
+            // var_dump($this->data); echo "<br>";
             $result = $this->data && $pre->execute(array_values($this->data)) ? $this->pdo->lastInsertID() : false;
         } else if ($this->action === "UPDATE") {
             $result = $this->data && $pre->execute(array_merge(array_values($this->data), $this->where_values));
