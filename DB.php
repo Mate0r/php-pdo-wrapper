@@ -1,6 +1,6 @@
 <?php
 
-class BDD
+class DB
 {
     public static $instance;
     public $pdo;
@@ -266,3 +266,4 @@ class BDD
         return $result;
     }
 }
+
